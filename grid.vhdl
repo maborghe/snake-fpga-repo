@@ -7,9 +7,8 @@ entity grid is
     head_x : in integer range 0 to 63;
     head_y : in integer range 0 to 47;
     head_dir : in integer range 1 to 4;
-    ok : out integer range 0 to 4;
- apple_x : in integer range 0 to 63;
-   apple_y : in integer range 0 to 47
+    apple_x : in integer range 0 to 63;
+    apple_y : in integer range 0 to 47
   );
 end grid;
 
@@ -30,7 +29,7 @@ begin
     if (slow_clk'event and slow_clk = '1') then
       if head_x = apple_x and head_y = apple_y then
        grid(head_x)(head_y) <= 1;
-       -- Schlange wÃ¤chst
+       -- Schlange wächst
       elsif grid(head_x)(head_y) = 1 then
        -- Schlange stirbt
       else
@@ -40,13 +39,13 @@ begin
        grid(tail_x)(tail_y) <= 0;
        case tail_dir is 
          when 1 => tail_y <= tail_y - 1;
-           ok <= 1;
+           
          when 2 => tail_x <= tail_x + 1;
-           ok <= 2;
+           
          when 3 => tail_y <= tail_y + 1;
-           ok <= 3;
+          
          when others => tail_x <= tail_x - 1;
-           ok <= 4;
+           
        end case;
        
       end if;

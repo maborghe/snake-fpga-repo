@@ -23,10 +23,34 @@ begin
   begin
       if slow_clk'event and slow_clk = '1' then
           case dir is
-              when "01" => y_val <= y_val - 1;
-              when "10" => x_val <= x_val + 1;
-              when "11" => y_val <= y_val + 1;
-              when others => x_val <= x_val -1;
+              when "01" => head_dir <= 1;
+                  if y_val = 0 then
+                      y_val <= 47;
+                  else
+                      y_val <= y_val - 1;
+                  end if;
+                  
+              when "10" => head_dir <= 2;
+                  if x_val = 63 then
+                      x_val <= 0;
+                  else
+                      x_val <= x_val + 1;
+                  end if;
+                  
+              when "11" => head_dir <= 3;
+                  if y_val = 47 then
+                      y_val <= 0;
+                  else
+                      y_val <= y_val + 1;
+                  end if;
+                  
+              when others => head_dir <= 4;
+                    if x_val = 0 then
+                        x_val <= 63;
+                    else
+                        x_val <= x_val - 1;
+                    end if;
+                    
           end case;
       end if;
       

@@ -1,48 +1,57 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
--- 1. ghdl -a grid.vhdl funktioniert
-
--- 2. Kein Bedarf, die Schlange in einem eigenen Modul zu speichern:
--- wenn der Zugriff in Z. 37 und 41 zulässig sind (was ich mir nicht ganz sicher bin)
--- verschieben wir einfach den Kopf und löschen den Schwanz, die Kollisionsüberprüfung
--- würde auch recht einfach. Es gäbe zudem keine Längengrenze. Das ganze sollte mit
--- Modelsim simuliert werden um zu schauen ob es läuft
-
-
 entity grid is
-	port (
-		slow_clock : in std_logic; -- jede Sekunde oder so
-		head_x : in integer;
-		head_y : in integer;
-		last_tail_x : in integer;
-		last_tail_y : in integer;
-		apple_x : in integer;
-		apple_y : in integer
-	);
+  port (
+    slow_clk : in std_logic; -- jede Sekunde oder so
+    head_x : in integer range 0 to 63;
+    head_y : in integer range 0 to 47;
+    head_dir : in integer range 1 to 4;
+    ok : out integer range 0 to 4;
+ apple_x : in integer range 0 to 63;
+   apple_y : in integer range 0 to 47
+  );
 end grid;
 
 architecture behave of grid is
-	
-	type matrix_row is array (0 to 59) of std_logic;
-	type matrix is array (0 to 47) of matrix_row;	
-	signal grid : matrix := (others => (others => '0')); -- TODO: initialize snake!
-	
+  
+  type matrix_row is array (0 to 47) of integer range 0 to 4;
+  type matrix is array (0 to 63) of matrix_row;	
+  signal grid : matrix := (30 to 33 => (23 => 2, others => 0), others => (others => 0));
+                          
+  signal tail_x : integer := 30;
+  signal tail_y : integer := 23;
+  
 begin
 
-	move : process (slow_clock)
-	begin
-		if head_x = apple_x and head_y = apple_y then
-			-- Schlange wächst
-		elsif grid(head_x)(head_y) = '1' then
-			-- Schlange stirbt
-		else
-			-- Normale Bewegung
-			grid(head_x)(head_y) <= '1';
-			grid(last_tail_x)(last_tail_y) <= '0';
-		end if;
-		
-		
-	end process;
-	
-end behave;
+  move : process (slow_clk)
+    variable tail_dir : integer range 0 to 4 := 1;
+  begin
+    if (slow_clk'event and slow_clk = '1') then
+      if head_x = apple_x and head_y = apple_y then
+       grid(head_x)(head_y) <= 1;
+       -- Schlange wächst
+      elsif grid(head_x)(head_y) = 1 then
+       -- Schlange stirbt
+      else
+       -- Normale Bewegung
+       tail_dir := grid(tail_x)(tail_y);
+       grid(head_x)(head_y) <= head_dir;
+       grid(tail_x)(tail_y) <= 0;
+       case tail_dir is 
+         when 1 => tail_y <= tail_y - 1;
+           ok <= 1;
+         when 2 => tail_x <= tail_x + 1;
+           ok <= 2;
+         when 3 => tail_y <= tail_y + 1;
+           ok <= 3;
+         when others => tail_x <= tail_x - 1;
+           ok <= 4;
+       end case;
+       
+      end if;
+    end if;
+    
+  end process;
+  
+end behave;	

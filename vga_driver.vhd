@@ -13,6 +13,15 @@ entity vga_driver is
 end vga_driver;
 
 architecture structural of vga_driver is
+
+	component slow_clock
+		port (
+			clk  : in  std_logic;
+			slow_clk : out std_logic
+		);
+	end component;
+	
+	
 	component sync
 		port (
 			clk : in std_logic;
@@ -24,24 +33,38 @@ architecture structural of vga_driver is
 		);
 	end component;
 
-	component pixel
+	component snake
+		port (
+			col : in integer range 0 to 79;
+			row : in integer range 0 to 59;
+			video_on : in std_logic;
+			clk : in std_logic;
+			slow_clk : in std_logic;
+			dir : in std_logic_vector(1 downto 0);
+			value : out integer range 0 to 4
+		);
+	end component;
+	
+	component graphic_unit 
 		port (
 			clk : in std_logic;
-			video : in std_logic;
-			col : in integer range 0 to 799;
-			row : in integer range 0 to 524;
+			value : in integer range 0 to 4;
 			r : out std_logic_vector(3 downto 0);
 			g : out std_logic_vector(3 downto 0);
 			b : out std_logic_vector(3 downto 0)
 		);
 	end component;
-
-	signal s0 : integer range 0 to 799;
-	signal s1 : integer range 0 to 524;
-	signal s2 : std_logic := '0';
+	 
+	signal col : integer range 0 to 799;
+	signal row : integer range 0 to 524;
+	signal video : std_logic;
+	signal slow_clk : std_logic;
+	signal value : integer range 0 to 4;
 
 begin
-	t1 : sync port map (clk, hsync, vsync, s2, s0, s1);
-	t2 : pixel port map (clk, s2, s0, s1, r, g, b);
-
+	t1 : sync port map (clk, hsync, vsync, video, col, row);
+	t2 : slow_clock port map (clk, slow_clk);
+	t3 : snake port map (col, row, video, clk, slow_clk, "10", value);
+	t4 : graphic_unit port map (clk, value, r, g, b);
+	
 end structural;

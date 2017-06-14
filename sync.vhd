@@ -4,9 +4,7 @@ use ieee.std_logic_1164.all;
 entity sync is
 	port (
 		clk 	: in 	std_logic;
-		hsync : out std_logic;
-		vsync : out std_logic;
-		video : out std_logic;
+		hsync, vsync, video : out std_logic;
 		col 	: out integer range 0 to 799;
 		row 	: out integer range 0 to 524
 	);
@@ -27,6 +25,7 @@ architecture behave of sync is
 	constant VBP : integer := 30;   --   30   Left boarder (back porch)
 
 begin
+
 	h_count : process (clk)
 	begin
 		if clk'event and clk = '1' then
@@ -83,6 +82,7 @@ begin
 			end if;
 		end if;
 	end process;
+	
 	col <= h_pos;
 	row <= v_pos;
 

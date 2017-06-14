@@ -8,11 +8,14 @@ entity slow_clock is
 	);
 end slow_clock;
 
-architecture Behavioral of slow_clock is
+architecture behave of slow_clock is
+	
 	constant num : integer := 12587500;
 	signal counter : integer := 1;
 	signal clk_out : std_logic;
+	
 begin
+
 	process(clk)
 	begin
 		if (clk'event and clk='1') then
@@ -25,5 +28,5 @@ begin
 		end if;
 	end process;
 	slow_clk <= clk_out;
-end Behavioral;
-
+	
+end behave;

@@ -37,10 +37,30 @@ begin
 			grid(head_x)(head_y) <= head_dir;
 			grid(old_tail_x)(old_tail_y) <= 0;
 			case tail_dir is 
-				when 1 => tail_y <= tail_y - 1;
-				when 2 => tail_x <= tail_x + 1;
-				when 3 => tail_y <= tail_y + 1;
-				when others => tail_x <= tail_x - 1;           
+				when 1 => 
+					if tail_y = 0 then
+						tail_y <= 59;
+					else
+						tail_y <= tail_y - 1;
+					end if;
+				when 2 => 
+					if tail_x = 79 then
+						tail_x <= 0;
+					else	
+						tail_x <= tail_x + 1;
+					end if;
+				when 3 =>
+					if y_val = 59 then
+						y_val <= 0;
+					else
+						tail_y <= tail_y + 1;
+					end if;
+				when others =>
+					if tail_x = 0 then
+						tail_x <= 79;
+					else
+						tail_x <= tail_x - 1; 
+					end if;
 			end case;
 		end if;
 	end process;

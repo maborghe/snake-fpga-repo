@@ -45,7 +45,7 @@ begin
 	process (clk)
 	begin
 		if clk'event and clk = '1' then
-			if value = 0 then
+			if value = 0 or value = -1 then
 				r <= "0000";
 				g <= "0000";
 				b <= "0000";

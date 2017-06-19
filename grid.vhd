@@ -50,8 +50,8 @@ begin
 						tail_x <= tail_x + 1;
 					end if;
 				when 3 =>
-					if y_val = 59 then
-						y_val <= 0;
+					if tail_y = 59 then
+						tail_y <= 0;
 					else
 						tail_y <= tail_y + 1;
 					end if;

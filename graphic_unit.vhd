@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity graphic_unit is
 	port (
 		clk : in std_logic;
-		value : in integer range 0 to 4;
+		value : in integer range -1 to 4;
 		r : out std_logic_vector(3 downto 0);
 		g : out std_logic_vector(3 downto 0);
 		b : out std_logic_vector(3 downto 0)

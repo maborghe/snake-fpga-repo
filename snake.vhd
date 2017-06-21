@@ -3,55 +3,65 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity snake is
 	port (
-		clk, video : in std_logic;
-		col : in integer range 0 to 799;
-		row : in integer range 0 to 524;
-		dir : in std_logic_vector(1 downto 0);
-		value : out integer range -1 to 4
+		clk : in std_logic;
+		hsync, vsync : out std_logic;
+		r, g, b : out std_logic_vector(3 downto 0)
 	);
 end snake;
 
 architecture structure of snake is
 	
-	component slow_clock
+	component vga
 		port (
-			clk  : in  std_logic;
-			slow_clk : out std_logic
+			clk 	: in 	std_logic;
+			hsync, vsync, video : out std_logic;
+			col 	: out integer range 0 to 799;
+			row 	: out integer range 0 to 524
 		);
 	end component;
 	
-	component head
+	component mux
 		port (
-			slow_clk : in std_logic;
-			dir : in std_logic_vector(1 downto 0);
-			head_x : out integer range 0 to 79;
-			head_y : out integer range 0 to 59;
-			head_dir : out integer range 1 to 4
+			clk, video : in std_logic;
+			vga_col : in integer range 0 to 799;
+			vga_row : in integer range 0 to 524;
+			ram_addr : out integer range 0 to 4799;
+			we : out std_logic
 		);
 	end component;
 	
-	component grid
+	component ram
 		port (
-			clk, slow_clk, video : in std_logic;
-			col : in integer range 0 to 799;
-			row : in integer range 0 to 524;
-			head_x : in integer range 0 to 79;
-			head_y : in integer range 0 to 59;
-			head_dir : in integer range 1 to 4;
-			value : out integer range -1 to 4
+		 clk   : in  std_logic;
+		 we      : in  std_logic;
+		 address : in  integer range 0 to 4799;
+		 data_in  : in  std_logic_vector(2 downto 0);
+		 data_out : out std_logic_vector(2 downto 0)
+	  );
+	end component;
+	
+	component pixel
+		port (
+			clk, video : in std_logic;
+			data : in std_logic_vector(2 downto 0);
+			r, g, b : out std_logic_vector(3 downto 0)
 		);
 	end component;
 	
-	signal slow_clk : std_logic;
-	signal head_x : integer range 0 to 79;
-	signal head_y : integer range 0 to 59;
-	signal head_dir : integer range 1 to 4;
+	signal video : std_logic;
+	signal col : integer range 0 to 799;
+	signal row : integer range 0 to 524;
+	signal ram_addr : integer range 0 to 4799;
+	signal we : std_logic;
+	signal data : std_logic_vector(2 downto 0);
 	
 begin
 
-	mySlowClock : slow_clock port map(clk, slow_clk);
-	myHead : head port map(slow_clk, dir, head_x, head_y, head_dir);
-	myGrid : grid port map(clk, slow_clk, video, col, row, head_x, head_y, head_dir, value);
+	t1 : vga port map (clk, hsync, vsync, video, col, row);
+	t2 : mux port map (clk, video, col, row, 
+							ram_addr, we);
+	t3 : ram port map (clk, we, ram_addr, "000", data);
+	t4 : pixel port map (clk, video, data, r, g, b);
 	
 end structure;
 

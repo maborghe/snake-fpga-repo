@@ -1,16 +1,17 @@
+----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity sync is
+entity vga is
 	port (
 		clk 	: in 	std_logic;
 		hsync, vsync, video : out std_logic;
 		col 	: out integer range 0 to 799;
 		row 	: out integer range 0 to 524
 	);
-end sync;
+end vga;
 
-architecture behave of sync is
+architecture behave of vga is
 	signal h_pos : integer := 0;
 	signal v_pos : integer := 0;
 

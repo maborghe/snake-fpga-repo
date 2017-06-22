@@ -1,4 +1,8 @@
 NET clk   LOC = "P26";
+NET left  LOC = "J17";
+NET up    LOC = "J15";
+NET down  LOC = "J13";
+NET right LOC = "J10";
 NET hsync LOC = "K26";
 NET vsync LOC = "K25";
 NET r<0>  LOC = "L20";

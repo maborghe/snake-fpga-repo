@@ -13,8 +13,8 @@ end head;
 
 
 architecture behave of head is
-
-	signal x_val : integer range 0 to 79 := 56;
+	signal x_val : integer range 0 to 79 := 50;
+	--signal x_val : integer range 0 to 79 := 56;
 	signal y_val : integer range 0 to 59 := 30;
   
 begin
@@ -30,7 +30,7 @@ begin
 						y_val <= y_val - 1;
 					end if;
                   
-				when "10" => head_dir <= "010";
+		  		when "10" => head_dir <= "010";
 					if x_val = 79 then
 						x_val <= 0;
 					else

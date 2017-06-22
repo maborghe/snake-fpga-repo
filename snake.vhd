@@ -4,6 +4,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity snake is
 	port (
 		clk : in std_logic;
+		up			: in std_logic;
+		down		: in std_logic;
+		left		: in std_logic;
+		right		: in std_logic;
 		hsync, vsync : out std_logic;
 		r, g, b : out std_logic_vector(3 downto 0)
 	);
@@ -11,6 +15,16 @@ end snake;
 
 architecture structure of snake is
 	
+	component direction
+		port(
+			slow_clk : in std_logic;
+			up			: in std_logic;
+			down		: in std_logic;
+			left		: in std_logic;
+			right		: in std_logic;
+			dir : out std_logic_vector(1 downto 0)
+		);
+	end component;
 	component slow_clock
 		port(
 			clk		: in std_logic;
@@ -91,14 +105,14 @@ architecture structure of snake is
 	signal head_y, tail_y, del_y : integer range 0 to 59;
 	signal head_dir, pixel_data, data, entry : std_logic_vector(2 downto 0);
 	signal we : std_logic := '0';
-	
-	
+	signal dir : std_logic_vector(1 downto 0);
 begin
-
+	
 	t0 : slow_clock port map (clk, slow_clk);
+	t01: direction port map(slow_clk, up, down, left, right, dir);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
 	t2 : tail port map (slow_clk, entry, tail_x, tail_y, del_x, del_y);
-	t3 : head port map (slow_clk, "10", head_x, head_y, head_dir);
+	t3 : head port map (slow_clk, dir, head_x, head_y, head_dir);
 	t4 : mux port map (clk, video, col, row, gph_addr, head_x, tail_x, del_x,
 							head_y, tail_y, del_y, log_addr, data, we);
 	t5 : ram port map (clk, gph_addr, pixel_data, log_addr, data, we, entry);

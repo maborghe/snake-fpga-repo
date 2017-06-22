@@ -58,4 +58,3 @@ begin
 	addr_y <= tail_y;
 	
 end behave;
-

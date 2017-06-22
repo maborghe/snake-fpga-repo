@@ -9,9 +9,8 @@ entity slow_clock is
 end slow_clock;
 
 architecture behavioral of slow_clock is
-	--3146875*2 bug -- f div 4
-	--3146875 reduced bug 
-	constant num : integer := 3146875;	-- f div 8
+	--6293750
+	constant num : integer := 5;
 	signal counter : integer := 0;
 	signal temp : std_logic := '0';
 	

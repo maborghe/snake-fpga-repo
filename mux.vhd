@@ -19,7 +19,9 @@ end mux;
 
 architecture Behavioral of mux is
 
-	signal state : integer range 0 to 2 := 0; -- 0: read tail, 1: write head, 2: delete tail
+	signal state : integer range 0 to 2 := 0; -- 0: read tail, 
+															-- 1: write head, 
+															-- 2: delete tail
 	
 begin
 
@@ -47,7 +49,7 @@ begin
 					state <= 2;
 				when 2 =>
 					ram_addr <= del_y*80 + del_x;
-					data <= "000";
+					data <= "101";
 					we <= '1';
 					state <= 0;
 			end case;

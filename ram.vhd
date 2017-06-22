@@ -19,8 +19,7 @@ end ram;
 architecture behave of ram is
 
 	type ram_type is array (0 to 4799) of std_logic_vector(2 downto 0);
-   --signal memory : ram_type := (2450 to 2456 => "010", others => "000");
-	signal memory : ram_type := (2450 => "010", others => "000");
+   signal memory : ram_type := (401 to 404 => "010", others => "000");
 	signal log_read : integer range 0 to 4799;
 
 begin
@@ -37,10 +36,10 @@ begin
     if clk'event and clk = '1' then
       if we = '1' then
         memory(log_addr) <= data_in;
+		 else 
+		  log_out <= memory(log_addr);
       end if;
-      log_read <= log_addr;
     end if;
   end process;
-  log_out <= memory(log_read);
   
 end behave;

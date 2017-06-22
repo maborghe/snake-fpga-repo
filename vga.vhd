@@ -56,46 +56,38 @@ begin
 		end if;
 	end process;
 	
-	h_sync : process (h_pos)
+	h_sync : process (clk)
 	begin
-		if h_pos <= hd + hfp or h_pos > hd + hfp + hsp then
-			hsync <= '1';
-		else
-			hsync <= '0';
+		if clk'event and clk = '1' then
+			if h_pos <= hd + hfp or h_pos > hd + hfp + hsp then
+				hsync <= '1';
+			else
+				hsync <= '0';
+			end if;
 		end if;
 	end process;
 	
-	v_sync : process (v_pos)
+	v_sync : process (clk)
 	begin
-		if v_pos <= vd + vfp or v_pos > vd + vfp + vsp then
-			vsync <= '1';
-		else
-			vsync <= '0';
+		if clk'event and clk = '1' then
+			if v_pos <= vd + vfp or v_pos > vd + vfp + vsp then
+				vsync <= '1';
+			else
+				vsync <= '0';
+			end if;
 		end if;
 end process;
-
-	--video_on : process (clk)
-	--begin
-		--if clk'event and clk = '1' then
-		--	if h_pos < 640 and v_pos < 480 then
-		--		video <= '1';
-		--	else
-		--		video <= '0';
-		--	end if;
-	--	end if;
-	--end process;
 	
-	--col <= h_pos;
-	--row <= v_pos;
-	
-	output_filter : process (h_pos, v_pos)
+	output_filter : process (clk)
 	begin
-		if h_pos <= hd and v_pos <= vd then
-			col <= h_pos;
-			row <= v_pos;
-			video <= '1';
-		else
-			video <= '0';
+		if clk'event and clk = '1' then
+			if h_pos <= hd and v_pos <= vd then
+				col <= h_pos;
+				row <= v_pos;
+				video <= '1';
+			else
+				video <= '0';
+			end if;
 		end if;
 end process;
 

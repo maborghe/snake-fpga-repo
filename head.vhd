@@ -13,14 +13,17 @@ end head;
 
 
 architecture behave of head is
-	signal x_val : integer range 0 to 79 := 50;
-	--signal x_val : integer range 0 to 79 := 56;
-	signal y_val : integer range 0 to 59 := 30;
-  
+	signal x_val : integer range 0 to 79 := 5;
+	signal y_val : integer range 0 to 59 := 5;
+	
 begin
   
 	move : process(slow_clk)
+		variable last_head_x : integer range 0 to 79 := 4;
+		variable last_head_y : integer range 0 to 59 := 5;
 	begin
+	last_head_x := x_val;
+	last_head_y := y_val;
 		if slow_clk'event and slow_clk = '1' then
 			case dir is
 				when "01" => head_dir <= "001";
@@ -52,8 +55,10 @@ begin
 					end if;       
 			end case;
 		end if;
+		head_x <= last_head_x;
+		head_y <= last_head_y;
 	end process;
 	
-	head_x <= x_val;
-	head_y <= y_val;
+	
+	
 end behave;

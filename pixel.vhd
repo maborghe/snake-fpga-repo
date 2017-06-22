@@ -12,12 +12,15 @@ end pixel;
 architecture behave of pixel is
 	
 begin
-	
 	process(clk)
 	begin
 		if clk'event and clk = '1' then
 			if video = '0' or data = "000" then
 				r <= "0000";
+				g <= "0000";
+				b <= "0000";
+			elsif data = "101" then
+				r <= "1111";
 				g <= "0000";
 				b <= "0000";
 			else

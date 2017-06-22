@@ -109,7 +109,7 @@ architecture structure of snake is
 begin
 	
 	t0 : slow_clock port map (clk, slow_clk);
-	t01: direction port map(slow_clk, up, down, left, right, dir);
+	t01: direction port map(clk, up, down, left, right, dir);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
 	t2 : tail port map (slow_clk, entry, tail_x, tail_y, del_x, del_y);
 	t3 : head port map (slow_clk, dir, head_x, head_y, head_dir);

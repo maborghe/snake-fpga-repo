@@ -36,10 +36,10 @@ begin
     if clk'event and clk = '1' then
       if we = '1' then
         memory(log_addr) <= data_in;
-		 else 
-		  log_out <= memory(log_addr);
       end if;
+		log_read <= log_addr;
     end if;
   end process;
+  log_out <= memory(log_read);
   
 end behave;

@@ -14,8 +14,8 @@ end direction;
 
 
 architecture behavioral of direction is
-	signal tmp_direction : std_logic_vector(1 downto 0);
-	signal last_direction : std_logic_vector(1 downto 0):="10";
+	signal tmp_direction : std_logic_vector(1 downto 0) := "10";
+	signal last_direction : std_logic_vector(1 downto 0):= "10";
 	signal horizontal : std_logic:= '1';
 	signal vertical : std_logic:= '0';
 begin

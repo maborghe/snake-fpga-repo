@@ -111,8 +111,8 @@ begin
 	t0 : slow_clock port map (clk, slow_clk);
 	t01: direction port map(clk, up, down, left, right, dir);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
-	t2 : tail port map (slow_clk, entry, tail_x, tail_y, del_x, del_y);
-	t3 : head port map (slow_clk, dir, head_x, head_y, head_dir);
+	t2 : tail port map (clk, entry, tail_x, tail_y, del_x, del_y);
+	t3 : head port map (clk, dir, head_x, head_y, head_dir);
 	t4 : mux port map (clk, video, col, row, gph_addr, head_x, tail_x, del_x,
 							head_y, tail_y, del_y, log_addr, data, we);
 	t5 : ram port map (clk, gph_addr, pixel_data, log_addr, data, we, entry);

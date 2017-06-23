@@ -25,12 +25,7 @@ architecture structure of snake is
 			dir : out std_logic_vector(1 downto 0)
 		);
 	end component;
-	component slow_clock
-		port(
-			clk		: in std_logic;
-			slow_clk : out std_logic
-		);
-	end component;
+	
 	
 	component vga
 		port (
@@ -69,6 +64,7 @@ architecture structure of snake is
 			col : in integer range 0 to 799;
 			row : in integer range 0 to 524;
 			vga_addr : out integer range 0 to 4799;
+			head_dir : in std_logic_vector(2 downto 0);
 			head_x, tail_x, del_x : in integer range 0 to 79;
 			head_y, tail_y, del_y : in integer range 0 to 59;
 			ram_addr : out integer range 0 to 4799;
@@ -97,7 +93,7 @@ architecture structure of snake is
 		);
 	end component;
 	
-	signal video, slow_clk : std_logic;
+	signal video : std_logic;
 	signal col : integer range 0 to 799;
 	signal row : integer range 0 to 524;
 	signal gph_addr, log_addr : integer range 0 to 4799;
@@ -108,12 +104,11 @@ architecture structure of snake is
 	signal dir : std_logic_vector(1 downto 0);
 begin
 	
-	t0 : slow_clock port map (clk, slow_clk);
 	t01: direction port map(clk, up, down, left, right, dir);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
 	t2 : tail port map (clk, entry, tail_x, tail_y, del_x, del_y);
 	t3 : head port map (clk, dir, head_x, head_y, head_dir);
-	t4 : mux port map (clk, video, col, row, gph_addr, head_x, tail_x, del_x,
+	t4 : mux port map (clk, video, col, row, gph_addr, head_dir, head_x, tail_x, del_x,
 							head_y, tail_y, del_y, log_addr, data, we);
 	t5 : ram port map (clk, gph_addr, pixel_data, log_addr, data, we, entry);
 	t6 : pixel port map (clk, video, pixel_data, r, g, b);

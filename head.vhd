@@ -15,7 +15,7 @@ end head;
 architecture behave of head is
 	signal x_val : integer range 0 to 79 := 5;
 	signal y_val : integer range 0 to 59 := 5;
-	constant num : integer := 62937519;
+	constant num : integer := 6293760; --6293760
 	signal counter : integer := 0;
 	
 begin
@@ -24,11 +24,11 @@ begin
 		variable last_head_x : integer range 0 to 79 := 4;
 		variable last_head_y : integer range 0 to 59 := 5;
 	begin
-	last_head_x := x_val;
-	last_head_y := y_val;
-		if slow_clk'event and slow_clk = '1' then
+		if slow_clk'event and slow_clk = '1' then	
 			if counter = num then
 				counter <= 1;
+				last_head_x := x_val;
+				last_head_y := y_val;
 				case dir is
 					when "01" => head_dir <= "001";
 						if y_val = 0 then
@@ -61,11 +61,10 @@ begin
 			else
 				counter <= counter + 1;		
 			end if;
+			head_x <= last_head_x;
+			head_y <= last_head_y;
 		end if;
-		head_x <= last_head_x;
-		head_y <= last_head_y;
+		
 	end process;
-	
-	
-	
+
 end behave;

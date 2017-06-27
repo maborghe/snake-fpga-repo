@@ -30,7 +30,7 @@ begin
 	process(clk)
 	begin
 		if clk'event and clk = '1' then
-			if video = '1' then
+			if col <= 639 and row <= 479 then
 				vga_addr <= (row/8)*80 + (col/8);
 			end if;
 		end if;

@@ -14,16 +14,16 @@ end tail;
 
 architecture behave of tail is
 	signal dir : std_logic_vector(2 downto 0) := "010";
-	signal tail_x : integer range 0 to 79 := 1;
-	signal tail_y : integer range 0 to 59 := 5;
+	signal tail_x : integer range 0 to 79 := 4;
+	signal tail_y : integer range 0 to 59 := 0;
 	constant num : integer := 6293760;--6293760
 	signal counter : integer := 0;
 	
 begin
 
 	update : process(slow_clk)
-	variable save_x : integer range 0 to 79 := 1;
-	variable save_y : integer range 0 to 59 := 5;
+	variable save_x : integer range 0 to 79 := 4;
+	variable save_y : integer range 0 to 59 := 0;
 	begin
 		if slow_clk'event and slow_clk = '1' then
 			if counter = num then
@@ -38,8 +38,8 @@ begin
 							tail_y <= tail_y - 1;
 						end if;
 					when "100" => 
-						if tail_x = 79 then
-							tail_x <= 0;
+						if tail_x = 0 then
+							tail_x <= 79;
 						else	
 							tail_x <= tail_x - 1;
 						end if;
@@ -50,8 +50,8 @@ begin
 							tail_y <= tail_y + 1;
 						end if;
 					when others =>
-						if tail_x = 0 then
-							tail_x <= 79;
+						if tail_x = 79 then
+							tail_x <= 0;
 						else
 							tail_x <= tail_x + 1; 
 						end if;

@@ -1,4 +1,3 @@
-----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -12,8 +11,10 @@ entity vga is
 end vga;
 
 architecture behave of vga is
-	signal h_pos : integer := 0;
-	signal v_pos : integer := 0;
+	signal h_pos : integer range 0 to 799 := 798;
+	signal v_pos : integer range 0 to 524 := 524;
+	signal h2 : integer range 0 to 799 := 0;
+	signal v2: integer range 0 to 524 := 0;
 	signal init : integer := 0;
 	
 	constant hd : integer := 639; --horizontal display (640)
@@ -29,16 +30,11 @@ architecture behave of vga is
 begin
 	h_count : process (clk)
 	begin
-		if clk'event and clk = '1' then
+		if rising_edge(clk) then
 			if h_pos = hd + hfp + hsp + hbp then
 				h_pos <= 0;
 			else
-				if init = 0 then
-					h_pos <= 0;
-					init <= 1;
-				else
 				h_pos <= h_pos + 1;
-				end if;
 			end if;
 		end if;
 	end process;
@@ -51,6 +47,30 @@ begin
 					v_pos <= 0;
 				else
 					v_pos <= v_pos + 1;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	h2_count : process (clk)
+	begin
+		if rising_edge(clk) then
+			if h2 = hd + hfp + hsp + hbp then
+				h2 <= 0;
+			else
+				h2 <= h2 + 1;
+			end if;
+		end if;
+	end process;
+	
+	v2_count : process (clk)
+	begin
+		if clk'event and clk = '1' then
+			if h2 = hd + hfp + hsp + hbp then
+				if v2 = vd + vfp + vsp + vbp then
+					v2 <= 0;
+				else
+					v2 <= v2 + 1;
 				end if;
 			end if;
 		end if;
@@ -77,13 +97,14 @@ begin
 			end if;
 		end if;
 end process;
-	
+
+	col <= h2;
+	row <= v2;
+				
 	output_filter : process (clk)
 	begin
 		if clk'event and clk = '1' then
 			if h_pos <= hd and v_pos <= vd then
-				col <= h_pos;
-				row <= v_pos;
 				video <= '1';
 			else
 				video <= '0';

@@ -13,16 +13,16 @@ end head;
 
 
 architecture behave of head is
-	signal x_val : integer range 0 to 79 := 5;
-	signal y_val : integer range 0 to 59 := 5;
+	signal x_val : integer range 0 to 79 := 7;
+	signal y_val : integer range 0 to 59 := 0;
 	constant num : integer := 6293760; --6293760
 	signal counter : integer := 0;
 	
 begin
   
 	move : process(slow_clk)
-		variable last_head_x : integer range 0 to 79 := 4;
-		variable last_head_y : integer range 0 to 59 := 5;
+		variable last_head_x : integer range 0 to 79 := 6;
+		variable last_head_y : integer range 0 to 59 := 0;
 	begin
 		if slow_clk'event and slow_clk = '1' then	
 			if counter = num then

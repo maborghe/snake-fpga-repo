@@ -26,6 +26,14 @@ architecture structure of snake is
 		);
 	end component;
 	
+	component fruit
+		port (
+			clk, eaten : in std_logic;
+			entry : in std_logic_vector(2 downto 0);
+			found : out std_logic;
+			random_x, random_y : out integer
+		);
+	end component;
 	
 	component vga
 		port (
@@ -68,13 +76,14 @@ architecture structure of snake is
 	
 	component mux
 		port (
-			clk, video : in std_logic;
+			clk : in std_logic;
 			col : in integer range 0 to 799;
 			row : in integer range 0 to 524;
 			vga_addr : out integer range 0 to 4799;
+			found : in std_logic;
 			head_dir : in std_logic_vector(2 downto 0);
-			head_x, tail_x, del_x, new_head_x : in integer range 0 to 79;
-			head_y, tail_y, del_y, new_head_y : in integer range 0 to 59;
+			head_x, tail_x, del_x, new_head_x, fruit_x : in integer range 0 to 79;
+			head_y, tail_y, del_y, new_head_y, fruit_y : in integer range 0 to 59;
 			ram_addr : out integer range 0 to 4799;
 			data : out std_logic_vector(2 downto 0);
 			we : out std_logic
@@ -105,20 +114,21 @@ architecture structure of snake is
 	signal col : integer range 0 to 799;
 	signal row : integer range 0 to 524;
 	signal gph_addr, log_addr : integer range 0 to 4799;
-	signal head_x, tail_x, del_x, new_head_x : integer range 0 to 79;
-	signal head_y, tail_y, del_y, new_head_y : integer range 0 to 59;
+	signal head_x, tail_x, del_x, new_head_x, fruit_x : integer range 0 to 79;
+	signal head_y, tail_y, del_y, new_head_y, fruit_y : integer range 0 to 59;
 	signal head_dir, pixel_data, data, entry : std_logic_vector(2 downto 0);
-	signal we, eaten, reset : std_logic := '0';
+	signal we, eaten, reset, found : std_logic := '0';
 	signal dir : std_logic_vector(1 downto 0);
 begin
 	
 	t01: direction port map(clk, up, down, left, right, dir);
+	t02 : fruit port map (clk, eaten, entry, found, fruit_x, fruit_y);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
 	t2 : tail port map (clk, eaten, entry, tail_x, tail_y, del_x, del_y);
 	t3 : head port map (clk, dir, head_x, new_head_x, head_y, new_head_y, head_dir);
 	t3a : collision port map (clk, entry, eaten, reset);
-	t4 : mux port map (clk, video, col, row, gph_addr, head_dir, head_x, tail_x, del_x,
-							new_head_x,	head_y, tail_y, del_y, new_head_y, log_addr, data, we);
+	t4 : mux port map (clk, col, row, gph_addr, found, head_dir, head_x, tail_x, del_x,
+							new_head_x,	fruit_x, head_y, tail_y, del_y, new_head_y, fruit_y, log_addr, data, we);
 	t5 : ram port map (clk, gph_addr, pixel_data, log_addr, data, we, entry);
 	t6 : pixel port map (clk, video, pixel_data, r, g, b);
 	

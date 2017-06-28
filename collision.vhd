@@ -16,7 +16,6 @@ architecture behave of collision is
 	constant num : integer := 6293760; --6293760
 	signal counter : integer := 0;
 	
-	
 begin
 	
 	process (clk)

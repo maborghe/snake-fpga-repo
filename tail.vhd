@@ -14,16 +14,16 @@ end tail;
 
 architecture behave of tail is
 	signal dir : std_logic_vector(2 downto 0) := "010";
-	signal tail_x : integer range 0 to 79 := 4;
-	signal tail_y : integer range 0 to 59 := 0;
+	signal tail_x : integer range 0 to 79 := 38;
+	signal tail_y : integer range 0 to 59 := 29;
 	constant num : integer := 6293760;--6293760
 	signal counter : integer := 0;
 	
 begin
 
 	update : process(clk)
-	variable save_x : integer range 0 to 79 := 4;
-	variable save_y : integer range 0 to 59 := 0;
+	variable save_x : integer range 0 to 79 := 38;
+	variable save_y : integer range 0 to 59 := 29;
 	begin
 		if clk'event and clk = '1' then
 			if eaten = '0' then

@@ -17,9 +17,9 @@ entity ram is
 end ram;
 
 architecture behave of ram is
-
+	
 	type ram_type is array (0 to 4799) of std_logic_vector(2 downto 0);
-   signal memory : ram_type := (4 to 6 => "010", others => "000");
+   signal memory : ram_type := (4 to 6 => "010", 22 => "101", 50 => "101", others => "000");
 	signal log_read : integer range 0 to 4799;
 
 begin

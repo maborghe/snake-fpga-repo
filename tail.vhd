@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity tail is
 	port (
-		slow_clk : in std_logic;
+		clk, eaten : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
 		addr_x : out integer range 0 to 79;
 		addr_y : out integer range 0 to 59;
@@ -21,45 +21,47 @@ architecture behave of tail is
 	
 begin
 
-	update : process(slow_clk)
+	update : process(clk)
 	variable save_x : integer range 0 to 79 := 4;
 	variable save_y : integer range 0 to 59 := 0;
 	begin
-		if slow_clk'event and slow_clk = '1' then
-			if counter = num then
-				counter <= 1;
-				save_x := tail_x;
-				save_y := tail_y;
-				case dir is
-					when "001" => 
-						if tail_y = 0 then
-							tail_y <= 59;
-						else
-							tail_y <= tail_y - 1;
-						end if;
-					when "100" => 
-						if tail_x = 0 then
-							tail_x <= 79;
-						else	
-							tail_x <= tail_x - 1;
-						end if;
-					when "011" =>
-						if tail_y = 59 then
-							tail_y <= 0;
-						else
-							tail_y <= tail_y + 1;
-						end if;
-					when others =>
-						if tail_x = 79 then
-							tail_x <= 0;
-						else
-							tail_x <= tail_x + 1; 
-						end if;
-				end case;
-			else
-				counter <= counter + 1;		
-				if counter = 4 then
-					dir <= entry;
+		if clk'event and clk = '1' then
+			if eaten = '0' then
+				if counter = num then
+					counter <= 1;
+					save_x := tail_x;
+					save_y := tail_y;
+					case dir is
+						when "001" => 
+							if tail_y = 0 then
+								tail_y <= 59;
+							else
+								tail_y <= tail_y - 1;
+							end if;
+						when "100" => 
+							if tail_x = 0 then
+								tail_x <= 79;
+							else	
+								tail_x <= tail_x - 1;
+							end if;
+						when "011" =>
+							if tail_y = 59 then
+								tail_y <= 0;
+							else
+								tail_y <= tail_y + 1;
+							end if;
+						when others =>
+							if tail_x = 79 then
+								tail_x <= 0;
+							else
+								tail_x <= tail_x + 1; 
+							end if;
+					end case;
+				else
+					counter <= counter + 1;		
+					if counter = 9 then
+						dir <= entry;
+					end if;
 				end if;
 			end if;
 			del_x <= save_x;

@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 
 entity head is
 	port (
-		slow_clk : in std_logic;
+		clk : in std_logic;
 		dir : in std_logic_vector(1 downto 0);
-		head_x : out integer range 0 to 79;
-		head_y : out integer range 0 to 59;
+		head_x, new_head_x : out integer range 0 to 79;
+		head_y, new_head_y : out integer range 0 to 59;
 		head_dir : out std_logic_vector(2 downto 0)
 	);
 end head;
@@ -20,11 +20,11 @@ architecture behave of head is
 	
 begin
   
-	move : process(slow_clk)
+	move : process(clk)
 		variable last_head_x : integer range 0 to 79 := 6;
 		variable last_head_y : integer range 0 to 59 := 0;
 	begin
-		if slow_clk'event and slow_clk = '1' then	
+		if clk'event and clk = '1' then	
 			if counter = num then
 				counter <= 1;
 				last_head_x := x_val;
@@ -63,6 +63,8 @@ begin
 			end if;
 			head_x <= last_head_x;
 			head_y <= last_head_y;
+			new_head_x <= x_val;
+			new_head_y <= y_val;
 		end if;
 		
 	end process;

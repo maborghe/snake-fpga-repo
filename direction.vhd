@@ -58,4 +58,3 @@ end process;
 	last_direction <= tmp_direction;
 
 end behavioral;
-

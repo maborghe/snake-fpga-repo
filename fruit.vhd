@@ -1,73 +1,70 @@
-library ieee;
-use ieee.std_logic_1164.all;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
 entity fruit is
-	port(
-		clk, eaten 	: in std_logic;
+	port (
+		clk, eaten : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
-		random_x : out integer range 0 to 79;
-		random_y : out integer range 0 to 59
+		found : out std_logic;
+		random_x, random_y : out integer
 	);
 end fruit;
 
-architecture behavioral of fruit is
-
-	signal found : std_logic  := '0';
-	signal x_temp : std_logic_vector (7 downto 0) := (others => '0');
-	signal y_temp : std_logic_vector (7 downto 0) := (others => '0');
-	signal x2_temp : std_logic_vector (7 downto 0) := (others => '0');
-	signal y2_temp : std_logic_vector (7 downto 0) := (others => '0');
-	signal x : integer := 0;
-	signal y : integer := 0;
-	signal counter : integer := 0;
-	signal fill : std_logic_vector(2 downto 0) := "000";
-
+architecture Behavioral of fruit is
+	
+	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := (others => '0');
+	signal x, y, counter : integer := 0;
+	signal temp_found : std_logic := '0';
+	signal fill : std_logic_vector (2 downto 0);
 	
 begin
-	generate_numbers: process(clk) is
+	
+	generate_number : process (clk)
 	begin
 		if clk'event and clk = '1' then
-			if eaten = '1' or found = '0' then 
+			if counter = 8 and temp_found = '0' then
 				x_temp(7 downto 1) <= x_temp(6 downto 0);
 				x_temp(0) <= not(x_temp(7) xor x_temp(6) xor x_temp(4));
 				y_temp(7 downto 1) <= y_temp(6 downto 0);
 				y_temp(0) <= not(y_temp(5) xor y_temp(2) xor y_temp(0));	
+				x2_temp <= x_temp;
+				y2_temp <= y_temp;
 				x2_temp(7) <= '0';
 				x2_temp(6) <= '0';
 				y2_temp(7) <= '0';
 				y2_temp(6) <= '0';
 				x <= to_integer(unsigned(x2_temp));
 				y <= to_integer(unsigned(y2_temp));
+				random_x <= x;
+				random_y <= y;
 			end if;
 		end if;
 	end process;
 	
-	x2_temp <= x_temp;
-	y2_temp <= y_temp;
-				
-	output_filter: process(clk) is
-		variable taken : std_logic:= '1';
+	
+	process (clk)
 	begin
 		if clk'event and clk = '1' then
-			if counter = 25 then
-				counter <= 1;
-				if eaten = '1' or taken = '1' then
+			if eaten = '1' then
+				if counter = 30 then
+					counter <= 1;
+					if temp_found = '0' then
 						if fill = "000" and y <= 59 then
-							random_x <= x;
-							random_y	<= y;
-							found <= '0';
-						else
-							found <= '1';
+							temp_found <= '1';
 						end if;
+					end if;
 				else
-					counter <= counter + 1;		
+					counter <= counter + 1;
 					if counter = 14 then
 						fill <= entry;
 					end if;
 				end if;
+			else
+				temp_found <= '0';
 			end if;
 		end if;
 	end process;
-
-end behavioral;
+	found <= temp_found;
+	
+end Behavioral;

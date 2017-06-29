@@ -3,7 +3,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity mux is
 	port (
-		clk : in std_logic;
+		clk,reset : in std_logic;
+		reset_counter : in integer range 0 to 4799;
 		-- Graphic
 		col : in integer range 0 to 799;
 		row : in integer range 0 to 524;
@@ -27,6 +28,7 @@ architecture Behavioral of mux is
 															-- 3: write head, 
 															-- 4: delete tail,
 															-- 5: write fruit
+															-- 6: reset ram
 	signal counter : integer range 0 to 10 := 0;
 	
 begin
@@ -43,46 +45,63 @@ begin
 	process(clk)
 	begin
 		if clk'event and clk = '1' then
-			case state is
-				when 0 =>
-					ram_addr <= new_head_y*80 + new_head_x;
-					we <= '0';
-				when 1 =>
-					ram_addr <= tail_y*80 + tail_x;
-					we <= '0';
-				when 2 =>
-					ram_addr <= fruit_y*80 + fruit_x;
-					we <= '0';
-				when 3 =>
-					ram_addr <= head_y*80 + head_x;
-					data <= head_dir;
-					we <= '1';
-				when 4 =>
-					ram_addr <= del_y*80 + del_x;
+			if reset = '1' then
+			ram_addr <= reset_counter;
+				if reset_counter >= 2358 and reset_counter <= 2361 then
+					data <= "010";
+				elsif reset_counter = fruit_y*80 + fruit_x then
+					data <= "101";
+				else
 					data <= "000";
-					we <= '1';
-				when 5 =>
-					if found = '1' then
+				end if;
+				we <= '1';
+			else 
+				case state is
+					when 0 =>
+						ram_addr <= new_head_y*80 + new_head_x;
+						we <= '0';
+					when 1 =>
+						ram_addr <= tail_y*80 + tail_x;
+						we <= '0';
+					when 2 =>
 						ram_addr <= fruit_y*80 + fruit_x;
-						data <= "101";
+						we <= '0';
+					when 3 =>
+						ram_addr <= head_y*80 + head_x;
+						data <= head_dir;
 						we <= '1';
-					end if;
-			end case;
+					when 4 =>
+						ram_addr <= del_y*80 + del_x;
+						data <= "000";
+						we <= '1';
+					when 5 =>
+						if found = '1' then
+							ram_addr <= fruit_y*80 + fruit_x;
+							data <= "101";
+							we <= '1';
+						end if;
+				end case;
+			end if;
 		end if;
 	end process;
 	
 	count : process(clk)
 	begin
 		if clk'event and clk = '1' then
-			if counter = 5 then
-				counter <= 1;
-				if state = 5 then
-					state <= 0;
-				else
-					state <= state + 1;
-				end if;
+			if reset = '1' then
+				counter <= 0;
+				state <= 0;
 			else
-				counter <= counter + 1;
+				if counter = 5 then
+					counter <= 1;
+					if state = 5 then
+						state <= 0;
+					else
+						state <= state + 1;
+					end if;
+				else
+					counter <= counter + 1;
+				end if;
 			end if;
 		end if;
 	end process;

@@ -27,7 +27,7 @@ begin
 				x_temp(7 downto 1) <= x_temp(6 downto 0);
 				x_temp(0) <= not(x_temp(7) xor x_temp(6) xor x_temp(4));
 				y_temp(7 downto 1) <= y_temp(6 downto 0);
-				y_temp(0) <= not(y_temp(5) xor y_temp(2) xor y_temp(0));	
+				y_temp(0) <= not(y_temp(6) xor y_temp(5) xor y_temp(3));	
 				x2_temp <= x_temp;
 				y2_temp <= y_temp;
 				x2_temp(7) <= '0';
@@ -50,7 +50,8 @@ begin
 				if counter = 30 then
 					counter <= 1;
 					if temp_found = '0' then
-						if fill = "000" and y <= 59 then
+						if fill = "000" and y <= 59 and -- empty field
+							not(y = 29 and x >= 29 and x <= 42) then
 							temp_found <= '1';
 						end if;
 					end if;

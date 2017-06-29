@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity tail is
 	port (
-		clk,reset, eaten : in std_logic;
+		clk,counter_6293760,counter_9_of_6293760,reset, eaten : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
 		addr_x : out integer range 0 to 79;
 		addr_y : out integer range 0 to 59;
@@ -16,8 +16,6 @@ architecture behave of tail is
 	signal dir : std_logic_vector(2 downto 0) := "010";
 	signal tail_x : integer range 0 to 79 := 38;
 	signal tail_y : integer range 0 to 59 := 29;
-	constant num : integer := 6293760;--6293760
-	signal counter : integer := 0;
 	
 begin
 
@@ -31,11 +29,10 @@ begin
 				tail_y <= 29;
 				save_x := 38;
 				save_y := 29;
-				counter <= 0;
+				--counter <= 0;
 			else
 				if eaten = '0' then
-					if counter = num then
-						counter <= 1;
+					if counter_6293760 = '1' then
 						save_x := tail_x;
 						save_y := tail_y;
 						case dir is
@@ -65,8 +62,7 @@ begin
 								end if;
 						end case;
 					else
-						counter <= counter + 1;		
-						if counter = 9 then
+						if counter_9_of_6293760 = '1' then
 							dir <= entry;
 						end if;
 					end if;

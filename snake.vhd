@@ -16,6 +16,13 @@ end snake;
 
 architecture structure of snake is
 	
+	component counter 
+		port(
+			clk: in std_logic;
+			counter_6293760,counter_9_of_6293760 : out std_logic
+		);
+	end component;
+	
 	component direction
 		port(
 			slow_clk : in std_logic;
@@ -47,7 +54,7 @@ architecture structure of snake is
 	
 	component tail
 		port (
-			clk,reset, eaten : in std_logic;
+			clk,counter_6293760,counter_9_of_6293760,reset, eaten : in std_logic;
 			entry : in std_logic_vector(2 downto 0);
 			addr_x : out integer range 0 to 79;
 			addr_y : out integer range 0 to 59;
@@ -59,7 +66,7 @@ architecture structure of snake is
 	
 	component head
 		port (
-			clk,reset : in std_logic;
+			clk, counter_6293760,reset : in std_logic;
 			dir : in std_logic_vector(1 downto 0);
 			head_x, new_head_x : out integer range 0 to 79;
 			head_y, new_head_y : out integer range 0 to 59;
@@ -120,7 +127,7 @@ architecture structure of snake is
 		);
 	end component;
 	
-	signal video : std_logic;
+	signal video, counter_6293760,counter_9_of_6293760 : std_logic;
 	signal col : integer range 0 to 799;
 	signal row : integer range 0 to 524;
 	signal gph_addr, log_addr, reset_counter : integer range 0 to 4799;
@@ -131,12 +138,12 @@ architecture structure of snake is
 	signal dir : std_logic_vector(1 downto 0);
 
 begin
-	
+	t001 : counter port map (clk, counter_6293760,counter_9_of_6293760);
 	t01: direction port map(clk, up, down, left, right, dir);
 	t02 : fruit port map (clk, eaten, entry, found, fruit_x, fruit_y);
 	t1 : vga port map (clk, hsync, vsync, video, col, row);
-	t2 : tail port map (clk, reset,eaten, entry, tail_x, tail_y, del_x, del_y);
-	t3 : head port map (clk, reset, dir, head_x, new_head_x, head_y, new_head_y, head_dir);
+	t2 : tail port map (clk, counter_6293760,counter_9_of_6293760, reset,eaten, entry, tail_x, tail_y, del_x, del_y);
+	t3 : head port map (clk,counter_6293760, reset, dir, head_x, new_head_x, head_y, new_head_y, head_dir);
 	t3a : collision port map (clk, entry, eaten, reset, reset_counter);
 	t4 : mux port map (clk,reset,reset_counter, col, row, gph_addr, found, head_dir, head_x, tail_x, del_x,
 							new_head_x,	fruit_x, head_y, tail_y, del_y, new_head_y, fruit_y, log_addr, data, we);

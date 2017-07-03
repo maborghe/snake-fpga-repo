@@ -1,19 +1,20 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity fruit is
-	port (
-		clk, eaten : in std_logic;
-		entry : in std_logic_vector(2 downto 0);
-		found : out std_logic;
-		random_x, random_y : out integer
+	port(
+		clk, eaten, counter_30, counter_14	: in std_logic;
+		entry 						: in std_logic_vector(2 downto 0);
+		found 						: out std_logic;
+		random_x 					: out integer range 0 to 79;
+		random_y						: out integer range 0 to 59
 	);
 end fruit;
 
 architecture Behavioral of fruit is
 	
-	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := (others => '0');
+	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := "01101100";--(others => '0');
 	signal x, y, counter : integer := 0;
 	signal temp_found : std_logic := '0';
 	signal fill : std_logic_vector (2 downto 0);
@@ -47,8 +48,8 @@ begin
 	begin
 		if clk'event and clk = '1' then
 			if eaten = '1' then
-				if counter = 30 then
-					counter <= 1;
+				if counter_30 = '1' then
+					--counter <= 1;
 					if temp_found = '0' then
 						if fill = "000" and y <= 59 and -- empty field
 							not(y = 29 and x >= 29 and x <= 42) then
@@ -56,8 +57,8 @@ begin
 						end if;
 					end if;
 				else
-					counter <= counter + 1;
-					if counter = 14 then
+					--counter <= counter + 1;
+					if counter_14 = '1' then
 						fill <= entry;
 					end if;
 				end if;

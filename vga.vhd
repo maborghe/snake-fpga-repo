@@ -2,11 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity vga is
-	port (
-		clk 	: in 	std_logic;
-		hsync, vsync, video : out std_logic;
-		col 	: out integer range 0 to 799;
-		row 	: out integer range 0 to 524
+	port(
+		clk 						: in 	std_logic;
+		hsync, vsync, video 	: out std_logic;
+		col 						: out integer range 0 to 799;
+		row 						: out integer range 0 to 524
 	);
 end vga;
 
@@ -14,7 +14,7 @@ architecture behave of vga is
 	signal h_pos : integer range 0 to 799 := 798;
 	signal v_pos : integer range 0 to 524 := 524;
 	signal h2 : integer range 0 to 799 := 0;
-	signal v2: integer range 0 to 524 := 0;
+	signal v2 : integer range 0 to 524 := 0;
 	signal init : integer := 0;
 	
 	constant hd : integer := 639; --horizontal display (640)
@@ -100,7 +100,7 @@ end process;
 
 	col <= h2;
 	row <= v2;
-				
+		
 	output_filter : process (clk)
 	begin
 		if clk'event and clk = '1' then

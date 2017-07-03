@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity tail is
 	port (
-		clk,counter_6293760,counter_9_of_6293760,reset, eaten : in std_logic;
+		clk,counter_step,counter_9,reset, eaten : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
 		addr_x : out integer range 0 to 79;
 		addr_y : out integer range 0 to 59;
@@ -32,7 +32,7 @@ begin
 				--counter <= 0;
 			else
 				if eaten = '0' then
-					if counter_6293760 = '1' then
+					if counter_step = '1' then
 						save_x := tail_x;
 						save_y := tail_y;
 						case dir is
@@ -62,7 +62,7 @@ begin
 								end if;
 						end case;
 					else
-						if counter_9_of_6293760 = '1' then
+						if counter_9 = '1' then
 							dir <= entry;
 						end if;
 					end if;

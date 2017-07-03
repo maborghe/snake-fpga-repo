@@ -2,15 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity head is
-	port (
-		clk,counter_6293760, reset : in std_logic;
-		dir : in std_logic_vector(1 downto 0);
-		head_x, new_head_x : out integer range 0 to 79;
-		head_y, new_head_y : out integer range 0 to 59;
-		head_dir : out std_logic_vector(2 downto 0)
+	port(
+		clk, counter_step, reset	: in std_logic;
+		dir 						: in std_logic_vector(1 downto 0);
+		head_x, new_head_x 	: out integer range 0 to 79;
+		head_y, new_head_y 	: out integer range 0 to 59;
+		head_dir 				: out std_logic_vector(2 downto 0)
 	);
 end head;
-
 
 architecture behave of head is
 	signal x_val : integer range 0 to 79 := 42;
@@ -28,9 +27,8 @@ begin
 				y_val <= 29;
 				last_head_x := 41;
 				last_head_y := 29;
-				--counter <= 0;
 			else 
-				if counter_6293760 = '1' then
+				if counter_step = '1' then
 					last_head_x := x_val;
 					last_head_y := y_val;
 					case dir is
@@ -69,7 +67,6 @@ begin
 			new_head_x <= x_val;
 			new_head_y <= y_val;
 		end if;
-		
 	end process;
 
 end behave;

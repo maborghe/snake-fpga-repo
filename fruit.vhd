@@ -7,14 +7,13 @@ entity fruit is
 		clk, eaten, counter_30, counter_14	: in std_logic;
 		entry 						: in std_logic_vector(2 downto 0);
 		found 						: out std_logic;
-		random_x 					: out integer range 0 to 79;
-		random_y						: out integer range 0 to 59
+		random_val					: out integer range 0 to 4799
 	);
 end fruit;
 
 architecture Behavioral of fruit is
 	
-	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := "01101100";--(others => '0');
+	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := (others => '0');
 	signal x, y, counter : integer := 0;
 	signal temp_found : std_logic := '0';
 	signal fill : std_logic_vector (2 downto 0);
@@ -37,8 +36,7 @@ begin
 				y2_temp(6) <= '0';
 				x <= to_integer(unsigned(x2_temp));
 				y <= to_integer(unsigned(y2_temp));
-				random_x <= x;
-				random_y <= y;
+				random_val <= y*80 + x;
 			end if;
 		end if;
 	end process;

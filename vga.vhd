@@ -5,8 +5,7 @@ entity vga is
 	port(
 		clk 						: in 	std_logic;
 		hsync, vsync, video 	: out std_logic;
-		col 						: out integer range 0 to 799;
-		row 						: out integer range 0 to 524
+		vga_addr : out integer range 0 to 4799
 	);
 end vga;
 
@@ -98,8 +97,15 @@ begin
 		end if;
 end process;
 
-	col <= h2;
-	row <= v2;
+
+	process(clk)
+	begin
+		if clk'event and clk = '1' then
+			if h2 <= 639 and v2 <= 479 then
+				vga_addr <= (v2/8)*80 + (h2/8);
+			end if;
+		end if;
+	end process;
 		
 	output_filter : process (clk)
 	begin

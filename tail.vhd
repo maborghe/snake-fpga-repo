@@ -5,10 +5,7 @@ entity tail is
 	port (
 		clk,counter_step,counter_9,reset, eaten : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
-		addr_x : out integer range 0 to 79;
-		addr_y : out integer range 0 to 59;
-		del_x : out integer range 0 to 79;
-		del_y : out integer range 0 to 59
+		addr, del : out integer range 0 to 4799
 	);
 end tail;
 
@@ -68,12 +65,11 @@ begin
 					end if;
 				end if;
 			end if;
-			del_x <= save_x;
-			del_y <= save_y;
+			del <= save_y*80 + save_x;
 		end if;
 		
 	end process;
-	addr_x <= tail_x;
-	addr_y <= tail_y;
+	addr <= tail_y*80 + tail_x;
+
 	
 end behave;

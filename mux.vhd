@@ -5,15 +5,10 @@ entity mux is
 	port (
 		clk,reset : in std_logic;
 		reset_counter : in integer range 0 to 4799;
-		-- Graphic
-		col : in integer range 0 to 799;
-		row : in integer range 0 to 524;
-		vga_addr : out integer range 0 to 4799;
 		--Logic
 		found : in std_logic;
 		head_dir : in std_logic_vector(2 downto 0);
-		head_x, tail_x, del_x, new_head_x, fruit_x : in integer range 0 to 79;
-		head_y, tail_y, del_y, new_head_y, fruit_y : in integer range 0 to 59;
+		head_addr, tail_addr, del_addr, new_head_addr, fruit_addr : in integer range 0 to 4799;
 		ram_addr : out integer range 0 to 4799;
 		data : out std_logic_vector(2 downto 0);
 		we : out std_logic
@@ -32,15 +27,6 @@ architecture Behavioral of mux is
 	signal counter : integer range 0 to 10 := 0;
 	
 begin
-
-	process(clk)
-	begin
-		if clk'event and clk = '1' then
-			if col <= 639 and row <= 479 then
-				vga_addr <= (row/8)*80 + (col/8);
-			end if;
-		end if;
-	end process;
 			
 	process(clk)
 	begin
@@ -49,7 +35,7 @@ begin
 			ram_addr <= reset_counter;
 				if reset_counter >= 2358 and reset_counter <= 2361 then
 					data <= "010";
-				elsif reset_counter = fruit_y*80 + fruit_x then
+				elsif reset_counter = fruit_addr then
 					data <= "101";
 				else
 					data <= "000";
@@ -58,25 +44,25 @@ begin
 			else 
 				case state is
 					when 0 =>
-						ram_addr <= new_head_y*80 + new_head_x;
+						ram_addr <= new_head_addr;
 						we <= '0';
 					when 1 =>
-						ram_addr <= tail_y*80 + tail_x;
+						ram_addr <= tail_addr;
 						we <= '0';
 					when 2 =>
-						ram_addr <= fruit_y*80 + fruit_x;
+						ram_addr <= fruit_addr;
 						we <= '0';
 					when 3 =>
-						ram_addr <= head_y*80 + head_x;
+						ram_addr <= head_addr;
 						data <= head_dir;
 						we <= '1';
 					when 4 =>
-						ram_addr <= del_y*80 + del_x;
+						ram_addr <= del_addr;
 						data <= "000";
 						we <= '1';
 					when 5 =>
 						if found = '1' then
-							ram_addr <= fruit_y*80 + fruit_x;
+							ram_addr <= fruit_addr;
 							data <= "101";
 							we <= '1';
 						end if;

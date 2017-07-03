@@ -5,8 +5,7 @@ entity head is
 	port(
 		clk, counter_step, reset	: in std_logic;
 		dir 						: in std_logic_vector(1 downto 0);
-		head_x, new_head_x 	: out integer range 0 to 79;
-		head_y, new_head_y 	: out integer range 0 to 59;
+		head, new_head 	: out integer range 0 to 4799;
 		head_dir 				: out std_logic_vector(2 downto 0)
 	);
 end head;
@@ -62,10 +61,8 @@ begin
 					end case;
 				end if;
 			end if;
-			head_x <= last_head_x;
-			head_y <= last_head_y;
-			new_head_x <= x_val;
-			new_head_y <= y_val;
+			head <= last_head_y*80 + last_head_x;
+			new_head <= y_val*80 + x_val;
 		end if;
 	end process;
 

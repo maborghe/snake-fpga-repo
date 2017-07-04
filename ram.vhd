@@ -35,9 +35,6 @@ begin
   logic : process(clk) 
   begin
     if clk'event and clk = '1' then
-		--if reset = '1' then
-			--memory <= (others => "000");
-		--end if;
       if we = '1' then
         memory(log_addr) <= data_in;
       end if;

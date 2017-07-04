@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 entity counter is
 	port(
 		clk, reset							: in std_logic;
-		counter_step, counter_9			: out std_logic;
+		counter_step, counter_4, counter_9			: out std_logic;
 		counter_30, counter_14 			: out std_logic
 	);
 end counter;
@@ -28,6 +28,11 @@ begin
 					counter_step <= '1';
 					counter <= 1;
 				else
+					if counter = 4 then
+						counter_4 <= '1';
+					else 
+						counter_4 <= '0';
+					end if;
 					if counter = 9 then
 						counter_9 <= '1';
 					else 

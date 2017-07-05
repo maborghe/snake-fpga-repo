@@ -22,7 +22,7 @@ begin
 		if clk'event and clk = '1' then
 			if reset = '1' then
 			
-	last_direction <= "10";
+				last_direction <= "10";
 				horizontal <= '1';
 			else
 				if(horizontal = '1') then 

@@ -19,14 +19,18 @@ begin
 				r <= "0000";
 				g <= "0000";
 				b <= "0000";
-			elsif data = "101" then
+			elsif data = "101" then -- fruit
 				r <= "1111";
 				g <= "0000";
 				b <= "0000";
-			else
+			elsif data = "110" then -- obstacle / Huerde
 				r <= "1111";
 				g <= "1111";
 				b <= "1111";
+			else
+				r <= "0000";
+				g <= "1111";
+				b <= "0000";
 			end if;
 		end if;
 	end process;

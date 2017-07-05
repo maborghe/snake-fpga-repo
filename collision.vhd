@@ -27,7 +27,7 @@ begin
 					when "101" => -- fruit
 						temp_eaten <= '1';
 						temp_reset <= '0';
-					when others => -- snake body
+					when others => -- snake body or obstacle
 						temp_reset <= '1';
 						temp_eaten <= '1';						
 					end case;

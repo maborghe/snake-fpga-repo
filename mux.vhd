@@ -16,13 +16,7 @@ end mux;
 
 architecture Behavioral of mux is
 
-	signal state : integer range 0 to 5 := 0; -- 0:	read head,
-															-- 1: read tail,
-															-- 2: read fruit,
-															-- 3: write head, 
-															-- 4: delete tail,
-															-- 5: write fruit
-															-- 6: reset ram
+	signal state : integer range 0 to 5 := 0;
 	signal counter : integer range 0 to 10 := 0;
 	
 begin
@@ -36,24 +30,24 @@ begin
 				we <= '1';
 			else 
 				case state is
-					when 0 =>
+					when 0 =>	-- read head
 						ram_addr <= new_head_addr;
 						we <= '0';
-					when 1 =>
+					when 1 =>	-- read tail
 						ram_addr <= tail_addr;
 						we <= '0';
-					when 2 =>
+					when 2 =>	-- read fruit
 						ram_addr <= fruit_addr;
 						we <= '0';
-					when 3 =>
+					when 3 =>	-- write head
 						ram_addr <= head_addr;
 						data <= head_dir;
 						we <= '1';
-					when 4 =>
+					when 4 =>	-- delete tail
 						ram_addr <= del_addr;
 						data <= "000";
 						we <= '1';
-					when 5 =>
+					when 5 =>	-- write fruit
 						if found = '1' then
 							ram_addr <= fruit_addr;
 							data <= "101";

@@ -24,7 +24,7 @@ begin
 				counter <= 0;
 			else
 				--counter for head/tail
-				if counter = 6293760 then
+				if counter =  6293760 then --6293760
 					counter_step <= '1';
 					counter <= 1;
 				else

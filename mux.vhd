@@ -32,7 +32,7 @@ begin
 		if clk'event and clk = '1' then
 			if reset = '1' then
 				ram_addr <= reset_addr;
-				
+				data <= reset_data;
 				we <= '1';
 			else 
 				case state is

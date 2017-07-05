@@ -1,4 +1,5 @@
 NET clk   LOC = "P26";
+NET sw4   LOC = "Y16";
 NET left  LOC = "J17";
 NET up    LOC = "J15";
 NET down  LOC = "J13";

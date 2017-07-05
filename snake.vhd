@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity snake is
 	port (
-		clk 							: in std_logic;
+		clk, sw4							: in std_logic;
 		up, down, left, right	: in std_logic;
 		hsync, vsync 				: out std_logic;
 		r, g, b 						: out std_logic_vector(3 downto 0);
@@ -95,7 +95,7 @@ architecture structure of snake is
 	
 	component state_machine
 		port (
-			clk, game_over : in std_logic;
+			clk, sw4, game_over : in std_logic;
 			fruit_addr : in integer range 0 to 4799;
 			reset : out std_logic;
 			data : out std_logic_vector(2 downto 0);
@@ -140,6 +140,6 @@ begin
 	m8 : ram port map (clk,reset, gph_addr, pixel_data, log_addr, ram_data, we, entry);
 	m9 : pixel port map (clk, video, pixel_data, r, g, b);
 	m10 : score port map (clk, eaten, led);
-	m11 : state_machine port map (clk, game_over, fruit_addr, reset, reset_data, reset_addr);
+	m11 : state_machine port map (clk, sw4, game_over, fruit_addr, reset, reset_data, reset_addr);
 	
 end structure;

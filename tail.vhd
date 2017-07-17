@@ -26,7 +26,6 @@ begin
 				tail_y <= 29;
 				save_x := 38;
 				save_y := 29;
-				--counter <= 0;
 			else
 				if eaten = '0' then
 					if counter_step = '1' then

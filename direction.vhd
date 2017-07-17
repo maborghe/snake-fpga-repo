@@ -3,9 +3,9 @@ use ieee.std_logic_1164.all;
 
 entity direction is
 	port(
-		clk, reset	: in std_logic;
-		up, down, left, right : in std_logic;
-		dir 					: out std_logic_vector(1 downto 0)
+		clk, reset					: in std_logic;
+		up, down, left, right 	: in std_logic;
+		dir 							: out std_logic_vector(1 downto 0)
 	);
 end direction;
 
@@ -21,7 +21,6 @@ begin
 	begin
 		if clk'event and clk = '1' then
 			if reset = '1' then
-			
 				last_direction <= "10";
 				horizontal <= '1';
 			else

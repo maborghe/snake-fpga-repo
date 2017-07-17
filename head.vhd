@@ -4,9 +4,9 @@ use ieee.std_logic_1164.all;
 entity head is
 	port(
 		clk, counter_step, reset	: in std_logic;
-		dir 						: in std_logic_vector(1 downto 0);
-		head, new_head 	: out integer range 0 to 4799;
-		head_dir 				: out std_logic_vector(2 downto 0)
+		dir 								: in std_logic_vector(1 downto 0);
+		head, new_head 				: out integer range 0 to 4799;
+		head_dir 						: out std_logic_vector(2 downto 0)
 	);
 end head;
 

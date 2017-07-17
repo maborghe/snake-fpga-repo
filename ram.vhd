@@ -19,8 +19,9 @@ end ram;
 architecture behave of ram is
 	
 	type ram_type is array (0 to 4799) of std_logic_vector(2 downto 0);
-   --signal memory : ram_type := (2358 to 2361 => "010", 1969 => "101", others => "000");
-	signal memory : ram_type := (2358 to 2361 => "010", 2370 to 2400 => "101", others => "000");
+	signal memory : ram_type := (2358 to 2361 => "010", others => "000");
+
+	--signal memory : ram_type := (2358 to 2361 => "010", 2370 to 2400 => "101", others => "000");
 	signal log_read, i: integer range 0 to 4799;
 	
 begin

@@ -30,24 +30,24 @@ begin
 				we <= '1';
 			else 
 				case state is
-					when 0 =>	-- read head
+					when 0 =>	-- read head #0
 						ram_addr <= new_head_addr;
 						we <= '0';
-					when 1 =>	-- read tail
+					when 1 =>	-- read tail #5
 						ram_addr <= tail_addr;
 						we <= '0';
-					when 2 =>	-- read fruit
+					when 2 =>	-- read fruit #10
 						ram_addr <= fruit_addr;
 						we <= '0';
-					when 3 =>	-- write head
+					when 3 =>	-- write head #15
 						ram_addr <= head_addr;
 						data <= head_dir;
 						we <= '1';
-					when 4 =>	-- delete tail
+					when 4 =>	-- delete tail #20
 						ram_addr <= del_addr;
 						data <= "000";
 						we <= '1';
-					when 5 =>	-- write fruit
+					when 5 =>	-- write fruit #25
 						if found = '1' then
 							ram_addr <= fruit_addr;
 							data <= "101";

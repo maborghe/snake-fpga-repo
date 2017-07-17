@@ -70,7 +70,7 @@ architecture structure of snake is
 	
 	component pixel
 		port (
-			clk, video, reset : in std_logic;
+			clk, video, game_over : in std_logic;
 			data : in std_logic_vector(2 downto 0);
 			vga_addr : in integer range 0 to 4799;
 			r, g, b : out std_logic_vector(3 downto 0)
@@ -100,7 +100,7 @@ architecture structure of snake is
 		port (
 			clk, sw4, game_over : in std_logic;
 			fruit_addr : in integer range 0 to 4799;
-			reset : out std_logic;
+			reset, game_over_pixel : out std_logic;
 			data : out std_logic_vector(2 downto 0);
 			address : out integer range 0 to 4799;
 			state_mod : out integer range 0 to 2
@@ -127,7 +127,7 @@ architecture structure of snake is
 				del_addr, new_head_addr, fruit_addr : integer range 0 to 4799;
 	signal head_dir, pixel_data, reset_data, ram_data, entry : std_logic_vector(2 downto 0);
 	signal video, counter_step, counter_4, counter_9,counter_8, counter_30, counter_14,counter_reset,
-				we, eaten, game_over, reset, found : std_logic := '0';
+				we, eaten, game_over, game_over_pixel, reset, found : std_logic := '0';
 	signal dir : std_logic_vector(1 downto 0);
 	signal state_mod : integer range 0 to 2;
 begin
@@ -140,10 +140,11 @@ begin
 	m5 : head port map (clk,counter_step, reset, dir, head_addr, new_head_addr, head_dir);
 	m6 : collision port map (clk, counter_4, counter_step, entry, eaten, game_over);
 	m7 : mux port map (clk, reset, found, reset_data, head_dir, reset_addr, head_addr, tail_addr, del_addr,
-							new_head_addr,	fruit_addr, log_addr, ram_data, we);
+			new_head_addr,	fruit_addr, log_addr, ram_data, we);
 	m8 : ram port map (clk,reset, gph_addr, pixel_data, log_addr, ram_data, we, entry);
-	m9 : pixel port map (clk, video, reset, pixel_data, gph_addr, r, g, b);
+	m9 : pixel port map (clk, video, game_over_pixel, pixel_data, gph_addr, r, g, b);
 	m10 : score port map (clk, eaten, led);
-	m11 : state_machine port map (clk, sw4, game_over, fruit_addr, reset, reset_data, reset_addr,state_mod);
+	m11 : state_machine port map (clk, sw4, game_over, fruit_addr, reset,
+			game_over_pixel, reset_data, reset_addr,state_mod);
 	
 end structure;

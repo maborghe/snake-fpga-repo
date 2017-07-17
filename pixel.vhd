@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pixel is
 	port (
-		clk, video, reset : in std_logic;
+		clk, video, game_over : in std_logic;
 		data : in std_logic_vector(2 downto 0);
 		vga_addr : in integer range 0 to 4799;
 		r, g, b : out std_logic_vector(3 downto 0)
@@ -37,13 +37,13 @@ architecture behave of pixel is
 		2293, 2294, 2295, 2296, 2300, 2301, 2302, 2303, 2305, 2306, 2308, 2309, 2310);
 		
 		signal i : integer range 0 to 298 := 0;
-		
+		signal temp_game_over : std_logic := '0';
 		
 begin
 	process(clk)
 	begin
 		if clk'event and clk = '1' then
-			if reset = '1' then
+			if temp_game_over = '1' then
 				if i = 298 then
 					i <= 0;
 				elsif vga_addr = rom(i) then
@@ -78,6 +78,7 @@ begin
 				b <= "0000";
 				i <= 0;
 			end if;
+			temp_game_over <= game_over;
 		end if;
 	end process;
 	

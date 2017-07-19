@@ -5,14 +5,14 @@ entity collision is
 	port (
 		clk, counter_4, counter_step : in std_logic;
 		entry : in std_logic_vector(2 downto 0);
-		eaten, game_over : out std_logic
+		eaten, eaten_score, game_over : out std_logic
 	);
 end collision;
 
 architecture behave of collision is
 	
 	signal fill : std_logic_vector(2 downto 0) := "000";
-	signal temp_eaten, temp_reset : std_logic := '0';
+	signal temp_eaten, temp_reset, temp_eaten_score : std_logic := '0';
 
 begin
 	
@@ -24,12 +24,15 @@ begin
 					when "000" =>
 						temp_eaten <= '0';
 						temp_reset <= '0';
+						temp_eaten_score <= '0';
 					when "101" => -- fruit
 						temp_eaten <= '1';
 						temp_reset <= '0';
+						temp_eaten_score <= '1';
 					when others => -- snake body or obstacle
 						temp_reset <= '1';
-						temp_eaten <= '1';						
+						temp_eaten <= '1';	
+						temp_eaten_score <= '0';
 					end case;
 			elsif counter_4 = '1' then
 				fill <= entry;
@@ -39,7 +42,8 @@ begin
 		end if;
 	end process;
 
-	eaten <= temp_eaten;
-	game_over <= temp_reset;
+eaten <= temp_eaten;
+game_over <= temp_reset;
+eaten_score <= temp_eaten_score;
 	
 end behave;

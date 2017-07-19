@@ -13,39 +13,35 @@ entity fruit is
 end fruit;
 
 architecture Behavioral of fruit is
-	
-	--signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := (others => '0');
-	signal x_temp, y_temp, x2_temp, y2_temp : std_logic_vector (7 downto 0) := "00000001";
-	signal counter : integer := 0;
-	signal x, y: integer range 0 to 64 := 10;
+	signal random_val_tmp	: integer range 0 to 4799 := 130;
+	signal x_tmp : std_logic_vector (5 downto 0) := "001001";
+	signal y_tmp : std_logic_vector (4 downto 0) := "00101";
+	signal c : integer range 0 to 3 := 2;
+	signal x, y: integer := 20;
 	signal temp_found : std_logic := '0';
 	signal fill : std_logic_vector (2 downto 0);
 	
 begin
 	
-	generate_number : process (clk)
+	generate_fruit_addr : process (clk)
 	begin
-		if clk'event and clk = '1' then
-		--no counter_8 = '1'
-			if temp_found = '0' then
-				
-				x_temp(7 downto 1) <= x_temp(6 downto 0);
-				x_temp(0) <= not(x_temp(7) xor x_temp(6) xor x_temp(4));
-				y_temp(7 downto 1) <= y_temp(6 downto 0);
-				y_temp(0) <= not(y_temp(6) xor y_temp(5) xor y_temp(3));	
-			
-				x2_temp <= x_temp;
-				y2_temp <= y_temp;
-				x2_temp(7) <= '0';
-				x2_temp(6) <= '0';
-				y2_temp(7) <= '0';
-				y2_temp(6) <= '0';
-				x <= to_integer(unsigned(x2_temp));
-				y <= to_integer(unsigned(y2_temp));
+		if clk'event and clk = '1' then	
+			if counter_8 = '1' and temp_found = '0' then 
+				if c = 3 then
+					c <= 1;
+					x_tmp(5 downto 1) <= x_tmp(4 downto 0);
+					x_tmp(0) <= not(x_tmp(5) xor x_tmp(4) xor x_tmp(3));
+					y_tmp(4 downto 1) <= y_tmp(3 downto 0);
+					y_tmp(0) <= not(y_tmp(4) xor y_tmp(1) xor y_tmp(0));	
+					y <= to_integer(unsigned(y_tmp));		
+					x <= to_integer(unsigned(x_tmp));
+					random_val_tmp <= y*80 + x;
+				else	
+					c <= c + 1;	
+				end if;
 			end if;
 		end if;
 	end process;
-	
 	
 	process (clk)
 	begin
@@ -53,31 +49,28 @@ begin
 			if eaten = '1' then
 				if counter_30 = '1' then
 					if temp_found = '0' then
-						
 						case state_mod is
 						when 0 =>											-- normal			
-							if (fill = "000" and y <= 59) and 			-- empty field
-								not(y = 29 and x >= 29 and x <= 42) then
-								random_val <= y*80 + x;
+							if (fill = "000") and 			-- empty field
+								(not(y = 29 and x >= 29 and x <= 42)) then
 								temp_found <= '1';
 							end if;
 						when 1 =>											
-							if (fill = "000" and y <= 59) and 	
-								not(y = 29 and x >= 29 and x <= 42) and
-								not((x >= 0 or x<= 79) or (y >= 0 or y <= 59)) then
-								random_val <= y*80 + x;
-								temp_found <= '1';
-								
+							if (fill = "000" and y <= 58) and 	
+								(y = 29 and x >= 29 and x <= 42) and
+								((x >= 1 and x <= 78) and (y >= 1 and y <= 58)) then
+								temp_found <= '1';	
 							end if;
-						when 2 =>											-- TODO apple
-							if (fill = "000" and y <= 59) and 			-- empty field
-								not(y = 29 and x >= 29 and x <= 42) then
-								temp_found <= '1';
-							end if;
-					end case;
-
-						
-						
+						when 2 =>	
+							if (fill = "000" and y <= 58) and 	
+									(y = 29 and x >= 29 and x <= 42) and
+									not((x >= 15 and x <= 30) and (y >= 15 and y <= 43)) and--k
+									not((x = 40) and (y >= 15 and y <= 43)) and--I
+									not((x = 60) and (y >= 15 and y <= 43)) and--T
+									not(( x >= 51 and x <= 70) and (y = 15))then--T
+									temp_found <= '1';
+							end if;								
+						end case;				
 					end if;
 				else
 					if counter_14 = '1' then
@@ -89,6 +82,7 @@ begin
 			end if;
 		end if;
 	end process;
-	found <= temp_found;
 	
+	found <= temp_found;
+	random_val <= random_val_tmp;
 end Behavioral;

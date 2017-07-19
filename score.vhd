@@ -4,33 +4,39 @@ use ieee.numeric_std.all;
 
 entity score is
 	port (
-		clk, eaten : in std_logic;
+		clk, reset, eaten : in std_logic;
 		led : out std_logic_vector(7 downto 0)
 	);
 end score;
 
 architecture Behavioral of score is
 
-	signal score_value : std_logic_vector(7 downto 0) := "00000000";
+	signal score_value, rec : std_logic_vector(7 downto 0) := "00000000";
 	signal counter : integer := 0;
 	
 begin
 
-	score_count : process(clk) 
+	score_count : process(clk)
+		variable taken : std_logic := '1';
 	begin
 		if clk'event and clk = '1' then
-			if eaten = '1' then
-				if counter = 6293750 then
-				--if counter = 6293760 then
-					counter <= 1;
+			if reset = '1' then
+				score_value <= "00000000";
+			elsif eaten = '1' then
+				if taken = '1' then
 					score_value <= std_logic_vector(unsigned(score_value) + 1);
-					led <= std_logic_vector(unsigned(score_value));
-				else
-					counter <= counter + 1;
+					if unsigned(score_value) = unsigned(rec) then
+						rec <= std_logic_vector(unsigned(score_value) + 1);
+					end if;
+					taken := '0';
 				end if;
+			else
+				taken := '1';
 			end if;
 		end if;
 	end process;
+
+led <= rec;
 
 end Behavioral;
 

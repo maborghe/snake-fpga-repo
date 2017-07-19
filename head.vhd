@@ -11,21 +11,21 @@ entity head is
 end head;
 
 architecture behave of head is
-	signal x_val : integer range 0 to 79 := 42;
+	signal x_val : integer range 0 to 79 := 47;
 	signal y_val : integer range 0 to 59 := 29;
 	signal head_dir_temp : std_logic_vector(2 downto 0) := "010";
 	
 begin
   
 	move : process(clk)
-		variable last_head_x : integer range 0 to 79 := 41;
+		variable last_head_x : integer range 0 to 79 := 46;
 		variable last_head_y : integer range 0 to 59 := 29;
 	begin
 		if clk'event and clk = '1' then
 			if reset = '1' then
-				x_val <= 42;
+				x_val <= 47;
 				y_val <= 29;
-				last_head_x := 41;
+				last_head_x := 46;
 				last_head_y := 29;
 				head_dir_temp <= "010";
 			else 

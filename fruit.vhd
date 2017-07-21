@@ -35,7 +35,25 @@ begin
 					y_tmp(0) <= not(y_tmp(4) xor y_tmp(1) xor y_tmp(0));	
 					y <= to_integer(unsigned(y_tmp));		
 					x <= to_integer(unsigned(x_tmp));
-					random_val_tmp <= y*80 + x;
+					case state_mod is
+						when 0 =>											-- normal			
+							if (not(y = 29 and x >= 29 and x <= 42)) then
+								random_val_tmp <= y*80 + x;
+							end if;
+						when 1 =>											
+							if(y = 29 and x >= 29 and x <= 42) and
+								((x >= 1 and x <= 78) and (y >= 1 and y <= 58)) then
+								random_val_tmp <= y*80 + x;
+							end if;
+						when 2 =>	
+							if (y = 29 and x >= 29 and x <= 42) and
+									not((x >= 15 and x <= 30) and (y >= 15 and y <= 43)) and--k
+									not((x = 40) and (y >= 15 and y <= 43)) and--I
+									not((x = 60) and (y >= 15 and y <= 43)) and--T
+									not(( x >= 51 and x <= 70) and (y = 15))then--T
+									random_val_tmp <= y*80 + x;
+							end if;								
+						end case;		
 				else	
 					c <= c + 1;	
 				end if;
@@ -49,28 +67,9 @@ begin
 			if eaten = '1' then
 				if counter_30 = '1' then
 					if temp_found = '0' then
-						case state_mod is
-						when 0 =>											-- normal			
-							if (fill = "000") and 			-- empty field
-								(not(y = 29 and x >= 29 and x <= 42)) then
-								temp_found <= '1';
-							end if;
-						when 1 =>											
-							if (fill = "000" and y <= 58) and 	
-								(y = 29 and x >= 29 and x <= 42) and
-								((x >= 1 and x <= 78) and (y >= 1 and y <= 58)) then
-								temp_found <= '1';	
-							end if;
-						when 2 =>	
-							if (fill = "000" and y <= 58) and 	
-									(y = 29 and x >= 29 and x <= 42) and
-									not((x >= 15 and x <= 30) and (y >= 15 and y <= 43)) and--k
-									not((x = 40) and (y >= 15 and y <= 43)) and--I
-									not((x = 60) and (y >= 15 and y <= 43)) and--T
-									not(( x >= 51 and x <= 70) and (y = 15))then--T
-									temp_found <= '1';
-							end if;								
-						end case;				
+						if fill = "000" then
+							temp_found <= '1';
+						end if;	
 					end if;
 				else
 					if counter_14 = '1' then

@@ -17,7 +17,11 @@ How to start:
 Button-mapping:
 
 SW4 := change the game mode (1. without border, 2. with border, 3. KIT)
+
 SW5 := left
+
 SW6 := up
+
 SW7 := down
+
 SW8 := right

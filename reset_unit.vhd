@@ -8,7 +8,8 @@ entity reset_unit is
 		reset, game_over_pixel : out std_logic;
 		data : out std_logic_vector(2 downto 0);
 		address : out integer range 0 to 4799;
-		state_mod : out integer range 0 to 2
+		state_mod : out integer range 0 to 2;
+		ff: out std_logic
 	);
 end reset_unit;
 
@@ -47,9 +48,9 @@ begin
 			if new_game = '1' then
 				if counter >= 2363 and counter <= 2366 then
 					data <= "010";
-				--bug part :(
-				elsif counter = fruit_addr and counter_8 = '1' then --
-					data <= "101";
+				--bug part :
+				--elsif counter = 120 then --
+					--data <= "101";
 				else
 					if counter = row*80 + 79 then 			
 						if row = 59 then
@@ -131,5 +132,5 @@ begin
 		end if;
 		state_mod <= state;
 	end process;
-
+ff <= new_game;
 end behave;

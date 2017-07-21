@@ -5,8 +5,7 @@ entity counter is
 	port(
 		clk, reset									: in std_logic;
 		counter_step, counter_4, counter_9	: out std_logic;
-		counter_30, counter_14,  counter_8 	: out std_logic;
-		counter_reset 								: out std_logic
+		counter_30, counter_14,  counter_8 	: out std_logic
 	);
 end counter;
 

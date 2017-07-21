@@ -4,7 +4,7 @@ use IEEE.Numeric_Std.all;
 
 entity ram is
   port (
-    clk,reset : in  std_logic;
+    clk : in  std_logic;
     -- Graphic
 	 gph_addr : in  integer range 0 to 4799;
 	 gph_out : out std_logic_vector(2 downto 0);

@@ -25,8 +25,7 @@ architecture structure of snake is
 		port(
 			clk, reset					: in std_logic;
 			counter_step, counter_4, counter_9 : out std_logic;
-			counter_30, counter_14,  counter_8 	: out std_logic;
-			counter_reset 	: out std_logic
+			counter_30, counter_14,  counter_8 	: out std_logic
 		);
 	end component;
 	
@@ -79,7 +78,7 @@ architecture structure of snake is
 	
 	component ram
 		port (
-		 clk,reset : in  std_logic;
+		 clk : in  std_logic;
 		 gph_addr : in  integer range 0 to 4799;
 		 gph_out : out std_logic_vector(2 downto 0);
 		 log_addr : in  integer range 0 to 4799;
@@ -91,7 +90,7 @@ architecture structure of snake is
 	
 	component reset_unit
 		port (
-			clk, counter_8, sw4, game_over : in std_logic;
+			clk, counter_8, counter_14, counter_30, sw4, game_over : in std_logic;
 			fruit_addr : in integer range 0 to 4799;
 			reset, game_over_pixel : out std_logic;
 			data : out std_logic_vector(2 downto 0);
@@ -126,13 +125,13 @@ architecture structure of snake is
 	signal gph_addr, log_addr, reset_addr, head_addr, tail_addr,
 				del_addr, new_head_addr, fruit_addr : integer range 0 to 4799;
 	signal head_dir, pixel_data, reset_data, ram_data, entry : std_logic_vector(2 downto 0);
-	signal video, counter_step, counter_4, counter_9,counter_8, counter_30, counter_14,counter_reset,
+	signal video, counter_step, counter_4, counter_9,counter_8, counter_30, counter_14,
 				we, eaten, eaten_score, game_over, game_over_pixel, reset, found : std_logic := '0';
 	signal dir : std_logic_vector(1 downto 0);
 	signal state_mod : integer range 0 to 2;
 begin
 
-	m0 : counter port map (clk, reset, counter_step, counter_4, counter_9, counter_30, counter_14, counter_8, counter_reset);
+	m0 : counter port map (clk, reset, counter_step, counter_4, counter_9, counter_30, counter_14, counter_8);
 	m1: direction port map(clk,reset, up, down, left, right, dir);
 	m2 : fruit port map (clk,eaten, counter_30, counter_14,counter_8, entry,state_mod, found, fruit_addr);
 	m3 : vga port map (clk, hsync, vsync, video, gph_addr);
@@ -141,10 +140,10 @@ begin
 	m6 : collision port map (clk, counter_4, counter_step, entry, eaten, eaten_score, game_over);
 	m7 : mux port map (clk, reset, found, reset_data, head_dir, reset_addr, head_addr, tail_addr, del_addr,
 			new_head_addr,	fruit_addr, log_addr, ram_data, we);
-	m8 : ram port map (clk,reset, gph_addr, pixel_data, log_addr, ram_data, we, entry);
+	m8 : ram port map (clk, gph_addr, pixel_data, log_addr, ram_data, we, entry);
 	m9 : pixel port map (clk, video, game_over_pixel, pixel_data, gph_addr, r, g, b);
 	m10 : score port map (clk, reset, eaten_score, led);
-	m11 : reset_unit port map (clk, counter_8, sw4, game_over, fruit_addr, reset,
+	m11 : reset_unit port map (clk, counter_8,counter_14, counter_30, sw4, game_over, fruit_addr, reset,
 			game_over_pixel, reset_data, reset_addr,state_mod);
 	
 end structure;

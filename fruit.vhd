@@ -27,8 +27,8 @@ begin
 	begin
 		if clk'event and clk = '1' then	
 			if counter_8 = '1' and temp_found = '0' then 
-				if c = 3 then
-					c <= 1;
+				--if c = 2 then
+					--c <= 1;
 					x_tmp(5 downto 1) <= x_tmp(4 downto 0);
 					x_tmp(0) <= not(x_tmp(5) xor x_tmp(4) xor x_tmp(3));
 					y_tmp(4 downto 1) <= y_tmp(3 downto 0);
@@ -36,9 +36,9 @@ begin
 					y <= to_integer(unsigned(y_tmp));		
 					x <= to_integer(unsigned(x_tmp));
 					random_val_tmp <= y*80 + x;
-				else	
-					c <= c + 1;	
-				end if;
+				--else	
+					--c <= c + 1;	
+				--end if;
 			end if;
 		end if;
 	end process;
